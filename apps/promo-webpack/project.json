@@ -1,0 +1,77 @@
+{
+  "name": "promo-webpack",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/promo-webpack/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/promo-webpack",
+        "compiler": "babel",
+        "main": "apps/promo-webpack/src/main.ts",
+        "tsConfig": "apps/promo-webpack/tsconfig.app.json",
+        "webpackConfig": "apps/promo-webpack/webpack.config.js",
+        "assets": [
+          "apps/promo-webpack/src/favicon.ico",
+          "apps/promo-webpack/src/assets"
+        ],
+        "index": "apps/promo-webpack/src/index.html",
+        "baseHref": "/",
+        "styles": ["apps/promo-webpack/src/styles.scss"],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/promo-webpack/src/environments/environment.ts",
+              "with": "apps/promo-webpack/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/webpack:dev-server",
+      "options": {
+        "buildTarget": "promo-webpack:build"
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "promo-webpack:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/promo-webpack/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/promo-webpack/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    }
+  }
+}
